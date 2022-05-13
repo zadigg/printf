@@ -25,15 +25,6 @@ The function has the following conversion specifies:
 - # - modifier for unsigned conversions
 - +: prints a plus sign in front of the number
 
-# Usage
-
-- include the `main.h ` header file on the function for using \_printf().
-- All the files are to be compiled on Ubuntu 14.04 LTS
-
-```bash
-Compile your code with `gcc -Wall -Werror -Wextra -pedantic *.c`
-```
-
 # Copyright
 
 Copyright (c) 2022 Abel Kibebe Wondimu Yohanness
