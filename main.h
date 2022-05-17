@@ -2,20 +2,24 @@
 #define MAIN_H
 
 #include <stdlib.h>
+#ifndef MAIN_H
+#define MAIN_H
+
+#include <stdlib.h>
 #include <stdarg.h>
 
 /**
- * struct flags - struct containing flags to "turn on"
+ * struct flags - struct containing flags to "turn on".
  * when a flag specifier is passed to _printf()
- * @plus: flag for the '+' character
- * @space: flag for the ' ' character
- * @hash: flag for the '#' character
+ * @plus: flag for the '+' character.
+ * @space: flag for the ' ' character.
+ * @hash: flag for the '#' character.
  */
 typedef struct flags
 {
-    int plus;
-    int space;
-    int hash;
+int plus;
+int space;
+int hash;
 } flags_t;
 
 /**
@@ -26,8 +30,8 @@ typedef struct flags
  */
 typedef struct printHandler
 {
-    char c;
-    int (*f)(va_list ap, flags_t *f);
+char c;
+int (*f)(va_list ap, flags_t *f);
 } ph;
 
 /* print_nums */
@@ -48,31 +52,29 @@ char *convert(unsigned long int num, int base, int lowercase);
 /* _printf */
 int _printf(const char *format, ...);
 
-/* get_print */
+/* tsget_print */
 int (*get_print(char s))(va_list, flags_t *);
 
-/* get_flag */
+/* tsget_flag */
 int get_flag(char s, flags_t *f);
 
-/* print_alpha */
+/* tsprint_alpha */
 int print_string(va_list l, flags_t *f);
 int print_char(va_list l, flags_t *f);
 
-/* write_funcs */
+/* tswrite_funcs */
 int _putchar(char c);
 int _puts(char *str);
 
-/* print_custom */
+/* tsprint_custom */
 int print_rot13(va_list l, flags_t *f);
 int print_rev(va_list l, flags_t *f);
 int print_bigS(va_list l, flags_t *f);
 
-/* print_address */
+/* tsprint_address */
 int print_address(va_list l, flags_t *f);
 
-/* print_percent */
+/* tsprint_percent */
 int print_percent(va_list l, flags_t *f);
 
-
 #endif
-
