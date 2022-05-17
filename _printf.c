@@ -1,83 +1,45 @@
-#include <unistd.h>
 #include "main.h"
-#include <stdio.h>
-
-/**
- * buffer_print - print given buffer to stdout
- * @buffer: buffer to print
- * @nbytes: number of bytes to print
- *
- * Return: nbytes
- */
-int buffer_print(char buffer[], unsigned int nbytes)
-{
-	write(1, buffer, nbytes);
-	return (nbytes);
-}
-
-/**
- * buffer_add - adds a string to buffer
- * @buffer: buffer to fill
- * @str: str to add
- * @buffer_pos: pointer to buffer first empty position
- *
- * Return: if buffer filled and emptyed return number of printed char
- * else 0
- */
-int buffer_add(char buffer[], char *str, unsigned int *buffer_pos)
-{
-	int i = 0;
-	unsigned int count = 0, pos = *buffer_pos, size = BUFFER_SIZE;
-
-	while (str && str[i])
-	{
-		if (pos == size)
-		{
-			count += buffer_print(buffer, pos);
-			pos = 0;
-		}
-		buffer[pos++] = str[i++];
-	}
-	*buffer_pos = pos;
-	return (count);
-}
 
 /**
  * _printf - produces output according to a format
- * @format: character string
  *
- * Return: the number of characters printed excluding the null byte
- * used to end output to strings
+ * Return: length of the formatted output string
  */
 int _printf(const char *format, ...)
 {
-	va_list ap;
-	unsigned int i = 0, buffer_pos = 0, count = 0;
-	char *res_str, *aux, buffer[BUFFER_SIZE];
+    int (*pfunc)(va_list, flags_t *);
+    const char *p;
+    va_list arguments;
+    flags_t flags = {0, 0, 0};
 
-	if (!format || !format[0])
-		return (-1);
-	va_start(ap, format);
-	aux = malloc(sizeof(char) * 2);
-	while (format && format[i])
-	{
-		if (format[i] == '%')
-		{
-			res_str = treat_format(format, &i, ap);
-			count += buffer_add(buffer, res_str, &buffer_pos);
-			free(res_str);
-		}
-		else
-		{
-			aux[0] = format[i++];
-			aux[1] = '\0';
-			count += buffer_add(buffer, aux, &buffer_pos);
-		}
-	}
-	count += buffer_print(buffer, buffer_pos);
-	free(aux);
-	va_end(ap);
-	if (!count)
-		count = -1;
-	return (count);
+    register int count = 0;
+
+    va_start(arguments, format);
+    if (!format || (format[0] == '%' && !format[1]))
+        return (-1);
+    if (format[0] == '%' && format[1] == ' ' && !format[2])
+        return (-1);
+    for (p = format; *p; p++)
+    {
+        if (*p == '%')
+        {
+            p++;
+            if (*p == '%')
+            {
+                count += _putchar('%');
+                continue;
+            }
+            while (get_flag(*p, &flags))
+                p++;
+            pfunc = get_print(*p);
+            count += (pfunc)
+                         ? pfunc(arguments, &flags)
+                         : _printf("%%%c", *p);
+        }
+        else
+            count += _putchar(*p);
+    }
+    _putchar(-1);
+    va_end(arguments);
+    return (count);
 }
